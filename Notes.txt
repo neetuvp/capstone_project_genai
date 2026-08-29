@@ -1,0 +1,8 @@
+ py -3.11 -m venv venv
+ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+ .\venv\Scripts\Activate.ps1 
+ pip install -r requirements.txt 
+ python -m uvicorn app.api.main:app --reload         
+http://127.0.0.1:8000/health-check
+
+http://localhost:8501/

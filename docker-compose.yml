@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    command: python -m uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+
+  ui:
+    build: .
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    command: streamlit run streamlit_app.py --server.address=0.0.0.0
+
+# Note: Ollama itself runs on the HOST machine (not in Docker) since it
+# needs direct access to your GPU/CPU resources for the LLM. The API
+# container reaches it via host.docker.internal, which Docker Desktop
+# maps to your host machine automatically on Mac/Windows. On Linux,
+# add "extra_hosts: - host.docker.internal:host-gateway" under api.
